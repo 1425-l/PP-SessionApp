@@ -1,32 +1,34 @@
+# This is a basic workflow to help you get started with Actions
+
+name: export-and-branch-solution
+
+# Controls when the workflow will run
 on:
   workflow_dispatch:
     inputs:
-    
-    # Change this value
-        solution_name:
-        description:'name of the solution to worked on from Power Platform'
-        required: true
-        default: Session
-    
-    #Do Not change these values
-        solution_exported_folder:
+      # Change this value
+      solution_name:
+        description:'name of this solution to worked on from Power Platform'
+        requied:true
+        default:Session
+       #Do Not change these values
+      solution_exported_folder:
         description: 'folder name for staging the exported solution *do not change*'
         required: true
-        default: out/exported/
-    
-    solution_folder:
-        description: 'staging the unpacked solution folder before check-in *do not change*'
-        required: true
-        default: out/solutions/
-    
-    solution_target_folder:
+        default: out/expored/
+      solution_folder:
+        description:'staging the unpacked solution folder before check-in *do not change*'
+        required:true
+        default:out/solutions/
+      solution_target_folder:
         description: 'folder name to be created and checked in *do not change*'
         required: true
         default: solutions/
+
     env:
-    ENVIRONMENT_URL:https://org9a9c2da6.crm5.dynamics.com/
+      ENVIRONMENT_URL: https://org9a9c2da6.crm5.dynamics.com/
     
-    jobs:
+  jobs:
     export -from-dev:
       runs -on: windows -latest
       env:
@@ -34,39 +36,39 @@ on:
     
     steps:
     - uses: actions/checkout@v2
-    with:1fs: true
+      with:1fs: true
     
     - name: who-am-i action
-    uses: microsoft/powerplatform-actions/who-am-i@0.4.0
-    with:
-      environment-url: ${{env.ENVIRONMENT_URL}}
-      user-nane: ${{env.USERNAME}}
-      password-secret: ${{secrets.password}}
+      uses: microsoft/powerplatform-actions/who-am-i@0.4.0
+      with:
+        environment-url: ${{env.ENVIRONMENT_URL}}
+        user-nane: ${{env.USERNAME}}
+        password-secret: ${{secrets.password}}
     
     - name: export-solution action
-    uses: microsoft/powerplatform-actions/export-solution@0.4.0
-    with:
-      environment-url: ${{env.ENVIRONMENT_URL}}
-      user-name: ${{env.USERNAME}}
-      password-secret:${{secrets.password}}
-      solution-name: ${{github.event.inputs.solution_name}}
-      solution-output -file:${( github.event.inputs.solution_exported_folder}}/${{ github.event.inputs.solution_name }}.zip
+      uses: microsoft/powerplatform-actions/export-solution@0.4.0
+      with:
+        environment-url: ${{env.ENVIRONMENT_URL}}
+        user-name: ${{env.USERNAME}}
+        password-secret: ${{secrets.password}}
+        solution-name: ${{github.event.inputs.solution_name}}
+        solution-output-file: ${( github.event.inputs.solution_exported_folder}}/${{ github.event.inputs.solution_name }}.zip
 
     - name: unpack-solution action
-    uses: microsoft/powerplatform-actions/unpack-solution@0.4.0
-    with:
-      solution-file: ${{ github.event.inputs.solution_exported_folder}}/${{github.event.inputs.solution_name}}.zip
-      solution-folder: ${( github.event.inputs.solution_folder}}/${{ github.event.inputs.solution_nane }}
-      solution-type: 'Unmanaged'
-      overwrite-files: true
+      uses: microsoft/powerplatform-actions/unpack-solution@0.4.0
+      with:
+        solution-file: ${{ github.event.inputs.solution_exported_folder}}/${{github.event.inputs.solution_name}}.zip
+        solution-folder: ${( github.event.inputs.solution_folder}}/${{ github.event.inputs.solution_nane }}
+        solution-type: 'Unmanaged'
+        overwrite-files: true
     
     - name: branch-solution, prepare it for a PullRequest
-    uses: microsoft/powerplatform-actions/branch-solution@0.4.0
-    with:
-      solution-folder: ${{github.event.inputs.solution_folder}}/${{github.event.inputs.solution_nane}}
-      solution-target-folder: $({ github.event.inputs.solution_target_folder})/$(( github.event.inputs.solution_name }}
-      repo-token: ${{secrets.GITHUB_TOKEN}}
-      allow-enpty-commit: true
+      uses: microsoft/powerplatform-actions/branch-solution@0.4.0
+      with:
+        solution-folder: ${{github.event.inputs.solution_folder}}/${{github.event.inputs.solution_nane}}
+        solution-target-folder: $({ github.event.inputs.solution_target_folder})/$(( github.event.inputs.solution_name }}
+        repo-token: ${{secrets.GITHUB_TOKEN}}
+        allow-enpty-commit: true
     
     - name: who-am-i action
       uses: microsoft/powerplatform-actions/who-am-i@0.4.0
@@ -76,12 +78,12 @@ on:
         password-secret: ${{ secrets.password }}
     
     - name: export-solution action
-    uses: microsoft/powerplatform-actions/export-solution@0.4.0
-    with:
-      environment-url: ${{env.ENVIRONMENT_URL}}
-      user-name:${{env.USERNAME}}password-secret: ${{ secrets.password }}
-      solution-name: ${{ github.event.inputs.solution_name }}
-      solution-output-file: S{{ github.event.inputs.solution_exported_folder})/S{( github.event.inputs.solution_name }}.zip
+      uses: microsoft/powerplatform-actions/export-solution@0.4.0
+      with:
+        environment-url: ${{env.ENVIRONMENT_URL}}
+        user-name:${{env.USERNAME}}password-secret: ${{ secrets.password }}
+        solution-name: ${{ github.event.inputs.solution_name }}
+        solution-output-file: S{{ github.event.inputs.solution_exported_folder})/S{( github.event.inputs.solution_name }}.zip
       
       - name: unpack-solution action
       uses: microsoft/powerplatform-actions/unpack-solution@0.4.0

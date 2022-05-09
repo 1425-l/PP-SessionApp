@@ -45,60 +45,30 @@ on:
       with:
         environment-url: ${{env.ENVIRONMENT_URL}}
         user-name: ${{env.USERNAME}}
-        password-secret: ${{secrets.password}}
-    
-    - name: export-solution action
-      uses: microsoft/powerplatform-actions/export-solution@0.4.0
-      with:
-        environment-url: ${{env.ENVIRONMENT_URL}}
-        user-name: ${{env.USERNAME}}
-        password-secret: ${{secrets.password}}
-        solution-name: ${{github.event.inputs.solution_name}}
-        solution-output-file: ${( github.event.inputs.solution_exported_folder}}/${{ github.event.inputs.solution_name}}.zip
-
-    - name: unpack-solution action
-      uses: microsoft/powerplatform-actions/unpack-solution@0.4.0
-      with:
-        solution-file: ${{ github.event.inputs.solution_exported_folder}}/${{github.event.inputs.solution_name}}.zip
-        solution-folder: ${( github.event.inputs.solution_folder}}/${{ github.event.inputs.solution_nane }}
-        solution-type: 'Unmanaged'
-        overwrite-files: true
-    
-    - name: branch-solution, prepare it for a PullRequest
-      uses: microsoft/powerplatform-actions/branch-solution@0.4.0
-      with:
-        solution-folder: ${{github.event.inputs.solution_folder}}/${{github.event.inputs.solution_nane}}
-        solution-target-folder: $({ github.event.inputs.solution_target_folder})/$(( github.event.inputs.solution_name }}
-        repo-token: ${{secrets.GITHUB_TOKEN}}
-        allow-enpty-commit: true
-    
-    - name: who-am-i action
-      uses: microsoft/powerplatform-actions/who-am-i@0.4.0
-      with:
-        environment -url: ${{env.ENVIRONMENT_URL}}
-        user-name: ${{env.USERNAME}}
         password-secret: ${{ secrets.password }}
     
     - name: export-solution action
       uses: microsoft/powerplatform-actions/export-solution@0.4.0
       with:
         environment-url: ${{env.ENVIRONMENT_URL}}
-        user-name:${{env.USERNAME}}password-secret: ${{ secrets.password }}
+        user-name: ${{env.USERNAME}}
+        password-secret: ${{ secrets.password }}
         solution-name: ${{ github.event.inputs.solution_name }}
-        solution-output-file: ${{github.event.inputs.solution_exported_folder})/${( github.event.inputs.solution_name }}.zip
-      
-      name: unpack-solution action
+        solution-output-file: ${( github.event.inputs.solution_exported_folder}}/${{ github.event.inputs.solution_name }}.zip
+
+    - name: unpack-solution action
       uses: microsoft/powerplatform-actions/unpack-solution@0.4.0
       with:
-        solution-file: ${{github.event.inputs.solution_exported_folder}}/${{github.event.inputs.solution_name }}.zip
-        solution-folder: ${{ github.event.inputs.solution_folder}}/${{ github.event.inputs.solution_name }}
+        solution-file: ${{ github.event.inputs.solution_exported_folder }}/${{ github.event.inputs.solution_name }}.zip
+        solution-folder: ${( github.event.inputs.solution_folder }}/${{ github.event.inputs.solution_name }}
         solution-type: 'Unmanaged'
         overwrite-files: true
-        
-        nane: branch-solution, prepare it for a PullRequest
-        uses: microsoft/powerplatform-actions/branch-solution@0.4.0
-        with:
-        solution-folder: ${{github.event.inputs.solution_folder}}/${{github.event.inputs.solution_name}}
-        solution-target-folder: ${{ github.event.inputs.solution_target_folder}}/${{ github.event.inputs.solution_name}}
-        repo-token: ${{secrets.GITHUB_TOKEN}}
-        allow-empty-commit: true
+    
+    - name: branch-solution, prepare it for a PullRequest
+      uses: microsoft/powerplatform-actions/branch-solution@0.4.0
+      with:
+        solution-folder: ${{ github.event.inputs.solution_folder }}/${{ github.event.inputs.solution_name }}
+        solution-target-folder: $({ github.event.inputs.solution_target_folder })/$(( github.event.inputs.solution_name }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        allow-enpty-commit: true
+    
